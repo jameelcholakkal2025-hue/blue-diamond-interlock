@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Blue Diamond Interlock</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div>
+        <h1>Admin Dashboard</h1>
+      </div>
+    </div>
+    <div class="header-right" id="headerRight">
+      <a href="catalogue.html" class="btn-outline">View Catalogue</a>
+      <button class="btn-outline" id="logoutBtn" style="display:none">Logout</button>
+    </div>
+  </header>
+
+  <!-- Login Section -->
+  <div id="loginSection" style="display:none">
+    <div class="login-card">
+      <img src="assets/logo.svg" alt="Blue Diamond Logo">
+      <h2>Admin Login</h2>
+      <p>Sign in with your Firebase admin account.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" placeholder="admin@bluediamond.com" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="adminPass">Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="adminPass" placeholder="Enter password" required autocomplete="current-password">
+            <button type="button" class="eye-btn" id="togglePass" aria-label="Show password">
+              <!-- eye open -->
+              <svg id="eyeOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <!-- eye closed (hidden by default) -->
+              <svg id="eyeClosed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Login</button>
+        <p class="error-msg" id="loginError"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div id="dashSection" style="display:none">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card stat-products">
+        <div class="stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/>
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-num" id="totalCount">0</div>
+          <div class="stat-lbl">Products</div>
+        </div>
+      </div>
+      <div class="stat-card stat-featured">
+        <div class="stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-num" id="featuredCount">0</div>
+          <div class="stat-lbl">Featured</div>
+        </div>
+      </div>
+      <div class="stat-card stat-stock">
+        <div class="stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-num" id="stockCount">0</div>
+          <div class="stat-lbl">In Stock</div>
+        </div>
+      </div>
+      <div class="stat-card stat-customers">
+        <div class="stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-num" id="customerCount">0</div>
+          <div class="stat-lbl">Customers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products table -->
+    <div class="toolbar">
+      <h2>All Products</h2>
+      <button class="btn-add" id="addNewBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add New Product
+      </button>
+    </div>
+
+    <div class="product-list" id="productList">
+      <p class="list-empty">Loading products…</p>
+    </div>
+
+    <!-- Add / Edit form -->
+    <div id="formSection">
+      <h3 id="formTitle">Add New Product</h3>
+      <form id="productForm" autocomplete="off">
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="fName">Product Name *</label>
+            <input type="text" id="fName" placeholder="e.g. Mushroom Model" required>
+          </div>
+
+          <div class="form-group">
+            <label for="fCategory">Category *</label>
+            <select id="fCategory" required>
+              <option value="">Select category</option>
+              <option value="interlock">Interlock</option>
+              <option value="natural">Natural Stone</option>
+              <option value="blocks">Blocks</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fSize">Size *</label>
+            <input type="text" id="fSize" placeholder='e.g. 8"x11"' required>
+          </div>
+
+          <div class="form-group">
+            <label for="fPrice">Price (₹/sqft — enter 0 for "Contact for price")</label>
+            <input type="number" id="fPrice" placeholder="0" min="0">
+          </div>
+
+          <div class="form-group">
+            <label for="fColor">Color / Finish *</label>
+            <input type="text" id="fColor" placeholder="e.g. Terracotta Red" required>
+          </div>
+
+          <div class="form-group">
+            <label>Options</label>
+            <div class="checkbox-row">
+              <label class="check-item">
+                <input type="checkbox" id="fFeatured"> Featured product
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="fInStock" checked> In Stock
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label for="fDesc">Description *</label>
+            <textarea id="fDesc" placeholder="Describe the product – texture, use case, durability…" required></textarea>
+          </div>
+
+          <div class="form-group full">
+            <label>Photo or Video</label>
+            <div class="img-upload-area" onclick="document.getElementById('mediaInput').click()">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <p style="font-size:0.88rem;margin-top:8px;color:#555;">Click to upload image or video</p>
+              <p class="upload-hint">JPG · PNG · WEBP · MP4 · MOV · Max 100 MB</p>
+              <input type="file" id="mediaInput" accept="image/*,video/*">
+            </div>
+            <div id="uploadProgress">
+              <div class="progress-bar-wrap"><div id="progressBar"></div></div>
+              <span id="progressText">Uploading 0%…</span>
+            </div>
+            <div id="mediaPreview"></div>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save">Save Product</button>
+          <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Firebase compat SDK (works without a module bundler) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

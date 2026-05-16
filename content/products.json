@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "name": "Mushroom Model",
+    "category": "interlock",
+    "size": "8\"x11\"",
+    "price": "Contact for price",
+    "priceNum": 0,
+    "description": "Premium terracotta interlock paver with organic mushroom texture. Ideal for driveways, pathways and courtyards. Slip-resistant surface.",
+    "color": "Terracotta Red",
+    "image": "",
+    "inStock": true,
+    "featured": true
+  },
+  {
+    "id": 2,
+    "name": "Eco Paver",
+    "category": "interlock",
+    "size": "10\"x10\"",
+    "price": "Contact for price",
+    "priceNum": 0,
+    "description": "Grey eco-friendly interlocking paver with diagonal groove design. Excellent drainage and durability for heavy foot traffic areas.",
+    "color": "Charcoal Grey",
+    "image": "",
+    "inStock": true,
+    "featured": true
+  },
+  {
+    "id": 3,
+    "name": "Coral Stone",
+    "category": "natural",
+    "size": "4\"x4\"",
+    "price": "Contact for price",
+    "priceNum": 0,
+    "description": "Natural coral stone with rustic texture. Perfect for garden paths, landscaping and traditional architecture. Each piece unique.",
+    "color": "Natural Grey",
+    "image": "",
+    "inStock": true,
+    "featured": true
+  },
+  {
+    "id": 4,
+    "name": "Nano Block",
+    "category": "blocks",
+    "size": "8x4",
+    "price": "Contact for price",
+    "priceNum": 0,
+    "description": "Compact nano block for retaining walls, borders and edging. High compressive strength, smooth finish, precise dimensions.",
+    "color": "Light Grey",
+    "image": "",
+    "inStock": true,
+    "featured": false
+  }
+]
