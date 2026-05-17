@@ -808,6 +808,8 @@ header {
   color: var(--text-mid);
   font-size: 0.82rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: all 0.18s;
   -webkit-tap-highlight-color: transparent;
   display: flex;
