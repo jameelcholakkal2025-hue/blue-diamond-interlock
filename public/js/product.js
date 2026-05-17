@@ -19,12 +19,17 @@ let resumeTimer   = null;
 const SLIDE_MS    = 3500;
 const RESUME_MS   = 5000;
 
+let catMap = {};
+
 async function init() {
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id) { window.location.href = 'catalogue.html'; return; }
 
   try {
-    const snap = await db.collection('products').doc(id).get();
+    const [snap] = await Promise.all([
+      db.collection('products').doc(id).get(),
+      loadCategories().then(m => { catMap = m; })
+    ]);
     if (!snap.exists) { window.location.href = 'catalogue.html'; return; }
     render({ id: snap.id, ...snap.data() });
   } catch (err) {
@@ -146,7 +151,7 @@ function setHero(url, el) {
 }
 
 function getCategoryLabel(cat) {
-  return { interlock: 'Interlock', natural: 'Natural Stone', blocks: 'Block' }[cat] || (cat || '');
+  return getCatLabel(cat, catMap);
 }
 
 function whatsappEnquiry(name, size) {
