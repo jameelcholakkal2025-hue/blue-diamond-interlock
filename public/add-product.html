@@ -161,9 +161,11 @@
               <label for="fSize">Size *</label>
               <input type="text" id="fSize" placeholder='e.g. 8"x11"' required inputmode="text">
             </div>
-            <div class="form-group">
-              <label for="fColor">Color / Finish *</label>
-              <input type="text" id="fColor" placeholder="e.g. Terracotta Red" required inputmode="text">
+            <div class="form-group" style="grid-column:1/-1">
+              <label>Color / Finish</label>
+              <div id="colorChips" class="color-chips-wrap">
+                <span style="color:#999;font-size:0.85rem">Loading colors…</span>
+              </div>
             </div>
           </div>
 

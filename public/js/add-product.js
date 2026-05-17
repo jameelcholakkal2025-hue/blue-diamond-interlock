@@ -43,6 +43,26 @@ auth.onAuthStateChanged(async user => {
       .map(([id, label]) => `<option value="${id}">${label}</option>`)
       .join('');
 
+  // Populate color chips from Firestore colors collection
+  try {
+    const colorSnap = await db.collection('colors').get();
+    const chipsWrap = document.getElementById('colorChips');
+    if (colorSnap.empty) {
+      chipsWrap.innerHTML = '<span style="color:#999;font-size:0.85rem">No colors found in Firestore.</span>';
+    } else {
+      chipsWrap.innerHTML = colorSnap.docs.map(d => {
+        const label = d.data().label || d.id;
+        return `<label class="color-chip">
+          <input type="checkbox" name="fColors" value="${label}">
+          <span>${label}</span>
+        </label>`;
+      }).join('');
+    }
+  } catch (e) {
+    document.getElementById('colorChips').innerHTML =
+      '<span style="color:#c62828;font-size:0.85rem">Failed to load colors.</span>';
+  }
+
   if (isEdit) {
     document.getElementById('pageTitle').textContent = 'Edit Product';
     document.getElementById('saveBtn').textContent   = 'Update Product';
@@ -56,13 +76,18 @@ async function loadProductForEdit(id) {
   if (!snap.exists) { showToast('Product not found', 'error'); return; }
   const p = { id: snap.id, ...snap.data() };
 
-  document.getElementById('fName').value       = p.name     || '';
-  document.getElementById('fCategory').value   = p.category || '';
-  document.getElementById('fSize').value       = p.size     || '';
+  document.getElementById('fName').value        = p.name     || '';
+  document.getElementById('fCategory').value    = p.category || '';
+  document.getElementById('fSize').value        = p.size     || '';
   document.getElementById('fPricePolish').value = p.priceWithPolish  || 0;
   document.getElementById('fPrice').value       = p.priceWithoutPolish || 0;
-  document.getElementById('fColor').value      = p.color    || '';
-  document.getElementById('fDesc').value       = p.description || '';
+  document.getElementById('fDesc').value        = p.description || '';
+
+  // Pre-select saved colors
+  const savedColors = p.colors || (p.color ? [p.color] : []);
+  document.querySelectorAll('input[name="fColors"]').forEach(cb => {
+    cb.checked = savedColors.includes(cb.value);
+  });
   document.getElementById('fFeatured').checked = !!p.featured;
   document.getElementById('fInStock').checked  = p.inStock !== false;
 
@@ -185,7 +210,8 @@ document.getElementById('productForm').addEventListener('submit', async e => {
     size:              document.getElementById('fSize').value.trim(),
     priceWithPolish,
     priceWithoutPolish,
-    color:       document.getElementById('fColor').value.trim(),
+    colors:      Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value),
+    color:       Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value).join(', '),
     description: document.getElementById('fDesc').value.trim(),
     featured:    document.getElementById('fFeatured').checked,
     inStock:     document.getElementById('fInStock').checked,
