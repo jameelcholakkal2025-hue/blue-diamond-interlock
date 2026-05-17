@@ -3,14 +3,16 @@ let _catCache = null;
 
 async function loadCategories() {
   if (_catCache) return _catCache;
-  const snap = await firebase.firestore()
-    .collection('categories')
-    .orderBy('label')
-    .get();
-  _catCache = { all: 'All Products' };
-  snap.docs.forEach(d => {
-    _catCache[d.id] = d.data().label || d.id;
-  });
+  try {
+    const snap = await firebase.firestore().collection('categories').get();
+    _catCache = { all: 'All Products' };
+    snap.docs.forEach(d => {
+      _catCache[d.id] = d.data().label || d.id;
+    });
+  } catch (e) {
+    // categories fetch failed — degrade gracefully, labels fall back to raw IDs
+    _catCache = { all: 'All Products' };
+  }
   return _catCache;
 }
 

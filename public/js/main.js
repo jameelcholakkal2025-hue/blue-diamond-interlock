@@ -30,7 +30,10 @@ async function init() {
 
   showSkeleton();
   try {
-    [allProducts, catMap] = await Promise.all([getProducts(), loadCategories()]);
+    [allProducts, catMap] = await Promise.all([
+      getProducts(),
+      loadCategories().catch(() => ({ all: 'All Products' }))
+    ]);
   } catch (err) {
     document.getElementById('productGrid').innerHTML =
       `<p style="color:#c62828;padding:20px">Failed to load products. Check internet connection.</p>`;

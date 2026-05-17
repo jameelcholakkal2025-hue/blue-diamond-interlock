@@ -28,7 +28,7 @@ async function init() {
   try {
     const [snap] = await Promise.all([
       db.collection('products').doc(id).get(),
-      loadCategories().then(m => { catMap = m; })
+      loadCategories().then(m => { catMap = m; }).catch(() => {})
     ]);
     if (!snap.exists) { window.location.href = 'catalogue.html'; return; }
     render({ id: snap.id, ...snap.data() });
