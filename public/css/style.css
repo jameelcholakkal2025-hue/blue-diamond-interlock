@@ -956,6 +956,7 @@ header {
   color: var(--navy);
   line-height: 1.25;
   margin-bottom: 3px;
+  text-transform: capitalize;
 }
 
 .card-size {
