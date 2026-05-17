@@ -451,6 +451,37 @@ header {
 .btn-catalogue {
   animation: cataloguePulse 2s ease-in-out 1s infinite;
 }
+
+/* Social buttons below View Catalogue */
+.hero-social {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: transform 0.18s, filter 0.18s;
+}
+.btn-social:active { transform: scale(0.95); }
+
+.btn-insta {
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: white;
+}
+
+.btn-wa {
+  background: #25D366;
+  color: white;
+}
 .btn-catalogue:active { transform: scale(0.96); }
 
 .btn-wa-hero {
