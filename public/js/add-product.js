@@ -44,14 +44,14 @@ auth.onAuthStateChanged(async user => {
       .join('');
 
   // Populate color chips from Firestore colors collection
+  const chipsWrap = document.getElementById('colorChips');
   try {
-    const colorSnap = await db.collection('colors').get();
-    const chipsWrap = document.getElementById('colorChips');
+    const colorSnap = await firebase.firestore().collection('colors').get();
     if (colorSnap.empty) {
-      chipsWrap.innerHTML = '<span style="color:#999;font-size:0.85rem">No colors found in Firestore.</span>';
+      chipsWrap.innerHTML = '<input type="text" id="fColorFallback" placeholder="e.g. Terracotta Red" style="width:100%;padding:10px;border:1.5px solid #ccc;border-radius:8px;font-size:0.9rem"><small style="color:#999">No colors in Firestore — type manually</small>';
     } else {
       chipsWrap.innerHTML = colorSnap.docs.map(d => {
-        const label = d.data().label || d.id;
+        const label = d.data().label || d.data().name || d.id;
         return `<label class="color-chip">
           <input type="checkbox" name="fColors" value="${label}">
           <span>${label}</span>
@@ -59,8 +59,9 @@ auth.onAuthStateChanged(async user => {
       }).join('');
     }
   } catch (e) {
-    document.getElementById('colorChips').innerHTML =
-      '<span style="color:#c62828;font-size:0.85rem">Failed to load colors.</span>';
+    console.error('Colors fetch error:', e.code, e.message);
+    // Fallback: text input — likely Firestore rules block colors collection
+    chipsWrap.innerHTML = `<input type="text" id="fColorFallback" placeholder="e.g. Terracotta Red" style="width:100%;padding:10px;border:1.5px solid #ccc;border-radius:8px;font-size:0.9rem"><small style="color:#c62828">Add Firestore rule: allow read for /colors/{doc} — error: ${e.code || e.message}</small>`;
   }
 
   if (isEdit) {
@@ -210,8 +211,18 @@ document.getElementById('productForm').addEventListener('submit', async e => {
     size:              document.getElementById('fSize').value.trim(),
     priceWithPolish,
     priceWithoutPolish,
-    colors:      Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value),
-    color:       Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value).join(', '),
+    colors:      (() => {
+      const chips = Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value);
+      if (chips.length) return chips;
+      const fallback = document.getElementById('fColorFallback');
+      return fallback && fallback.value.trim() ? [fallback.value.trim()] : [];
+    })(),
+    color:       (() => {
+      const chips = Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value);
+      if (chips.length) return chips.join(', ');
+      const fallback = document.getElementById('fColorFallback');
+      return fallback ? fallback.value.trim() : '';
+    })(),
     description: document.getElementById('fDesc').value.trim(),
     featured:    document.getElementById('fFeatured').checked,
     inStock:     document.getElementById('fInStock').checked,
