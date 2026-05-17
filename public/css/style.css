@@ -183,7 +183,7 @@ header {
 .hero-logo {
   width: 88px;
   height: 88px;
-  margin: 0 auto 20px;
+  margin: 0 auto;
   object-fit: contain;
   filter: drop-shadow(0 4px 16px rgba(91,187,234,0.5));
   animation: logoPopup 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
@@ -247,6 +247,7 @@ header {
   color: white;
   text-align: center;
   position: relative;
+  justify-content: space-evenly;
   gap: 0;
 }
 
@@ -255,7 +256,7 @@ header {
   font-weight: 900;
   letter-spacing: 0.5px;
   line-height: 1.2;
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 .slide-hero h1 em {
@@ -269,7 +270,7 @@ header {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   opacity: 0.7;
-  margin: 0 auto 20px !important;
+  margin: 0 auto !important;
   color: var(--sky-light);
 }
 
@@ -277,7 +278,7 @@ header {
   font-size: 0.92rem;
   opacity: 0.85;
   max-width: 300px;
-  margin: 0 auto 20px;
+  margin: 0 auto;
   line-height: 1.65;
 }
 
@@ -428,7 +429,7 @@ header {
   justify-content: center;
   width: 100%;
   max-width: 340px;
-  margin: 20px auto 0;
+  margin: 0 auto;
 }
 
 .btn-catalogue {
@@ -457,7 +458,7 @@ header {
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin-top: 14px;
+  margin: 0 auto;
 }
 
 .btn-social {
