@@ -483,6 +483,11 @@ header {
   background: #25D366;
   color: white;
 }
+
+.btn-fb {
+  background: #1877F2;
+  color: white;
+}
 .btn-catalogue:active { transform: scale(0.96); }
 
 .btn-wa-hero {
