@@ -570,3 +570,95 @@ body {
   /* Toast */
   .toast { left: 12px; right: 12px; bottom: 16px; text-align: center; }
 }
+
+/* ── Hamburger menu button ── */
+.menu-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.menu-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ── Slide-out menu ── */
+.slide-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s;
+}
+.slide-overlay.open { opacity: 1; pointer-events: all; }
+
+.slide-menu {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 260px;
+  height: 100%;
+  background: white;
+  z-index: 1001;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  transition: right 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.slide-menu.open { right: 0; }
+
+.slide-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  background: var(--blue-dark);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.slide-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.8;
+}
+.slide-close-btn:hover { opacity: 1; }
+
+.slide-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: var(--text-dark);
+  font-size: 0.92rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+.slide-menu-item:hover { background: var(--blue-pale); }
+
+.slide-menu-logout {
+  color: var(--red);
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+}
+.slide-menu-logout:hover { background: var(--red-light); }

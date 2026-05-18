@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Dashboard controls ──
-  document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+  document.getElementById('menuLogout').addEventListener('click', () => { toggleMenu(); auth.signOut(); });
   document.getElementById('addNewBtn').addEventListener('click', () => {
     window.location.href = 'add-product.html';
   });
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function showLogin() {
   document.getElementById('loginSection').style.display = 'flex';
   document.getElementById('dashSection').style.display  = 'none';
-  document.getElementById('logoutBtn').style.display    = 'none';
+  document.getElementById('menuBtn').style.display    = 'none';
 }
 
 
@@ -120,7 +120,7 @@ function showLogin() {
 async function showDash() {
   document.getElementById('loginSection').style.display = 'none';
   document.getElementById('dashSection').style.display  = 'block';
-  document.getElementById('logoutBtn').style.display    = 'inline-block';
+  document.getElementById('menuBtn').style.display    = 'inline-flex';
   await loadAdminProducts();
 }
 
@@ -258,3 +258,11 @@ function showToast(msg, type = 'success') {
 
 window.openForm      = openForm;
 window.confirmDelete = confirmDelete;
+
+function toggleMenu() {
+  const menu = document.getElementById('slideMenu');
+  const overlay = document.getElementById('menuOverlay');
+  const open = menu.classList.toggle('open');
+  overlay.classList.toggle('open', open);
+}
+window.toggleMenu = toggleMenu;
