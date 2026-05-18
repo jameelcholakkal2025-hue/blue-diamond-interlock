@@ -12,6 +12,21 @@ const WHATSAPP_NUMBER = '919048509858';
 if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
 const db = firebase.firestore();
 
+async function loadCategories() {
+  const snap = await db.collection('categories').get();
+  const map = { all: 'All Products' };
+  snap.docs.forEach(d => {
+    const data = d.data();
+    map[d.id] = data.name || data.label || data.category || d.id;
+  });
+  return map;
+}
+
+function getCatLabel(cat, map) {
+  if (!cat) return '';
+  return (map && map[cat]) ? map[cat] : cat;
+}
+
 let slideImages   = [];
 let slideIndex    = 0;
 let slideTimer    = null;
@@ -64,7 +79,7 @@ function render(p) {
     slideIndex  = images.indexOf(primaryUrl);
     if (slideIndex < 0) slideIndex = 0;
 
-    const THUMB_LIMIT = 5;
+    const THUMB_LIMIT = 4;
     const visible = images.slice(0, THUMB_LIMIT);
     const strip = document.getElementById('thumbStrip');
     strip.innerHTML = visible.map((url, i) => `

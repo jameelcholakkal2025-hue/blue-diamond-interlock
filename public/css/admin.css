@@ -57,6 +57,39 @@ body {
 }
 .btn-outline:hover { background: rgba(255,255,255,0.15); }
 
+.share-wrap { position: relative; }
+.share-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.share-icon-btn:hover { background: rgba(255,255,255,0.22); }
+.share-dropdown {
+  display: none;
+  position: absolute;
+  right: 0; top: calc(100% + 6px);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  min-width: 190px;
+  overflow: hidden;
+  z-index: 999;
+}
+.share-dropdown.open { display: block; }
+.share-option {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 11px 14px;
+  background: none; border: none;
+  font-size: 0.88rem; color: #1a1a1a;
+  cursor: pointer; text-align: left;
+  transition: background 0.15s;
+}
+.share-option:hover { background: #E3F2FD; }
+
 .back-btn {
   display: flex;
   align-items: center;

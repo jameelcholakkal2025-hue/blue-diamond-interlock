@@ -16,6 +16,21 @@ async function getProducts() {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
+async function loadCategories() {
+  const snap = await db.collection('categories').get();
+  const map = { all: 'All Products' };
+  snap.docs.forEach(d => {
+    const data = d.data();
+    map[d.id] = data.name || data.label || data.category || d.id;
+  });
+  return map;
+}
+
+function getCatLabel(cat, map) {
+  if (!cat) return '';
+  return (map && map[cat]) ? map[cat] : cat;
+}
+
 const WHATSAPP_NUMBER = '919048509858';
 
 let allProducts = [];
