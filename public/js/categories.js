@@ -29,14 +29,22 @@ document.getElementById('newCategoryName').addEventListener('keydown', e => {
 async function loadCategories() {
   const list = document.getElementById('categoryList');
   try {
-    const snap = await db.collection(COL).orderBy('name').get();
+    const snap = await db.collection(COL).get();
     if (snap.empty) {
       list.innerHTML = '<p class="empty-msg">No categories yet. Add one above.</p>';
       return;
     }
-    list.innerHTML = snap.docs.map(doc => itemHTML(doc.id, doc.data().name)).join('');
+    const docs = snap.docs
+      .map(doc => ({ id: doc.id, name: doc.data().name || doc.data().label || doc.data().category || '' }))
+      .filter(d => d.name)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    if (!docs.length) {
+      list.innerHTML = '<p class="empty-msg">No categories yet. Add one above.</p>';
+      return;
+    }
+    list.innerHTML = docs.map(d => itemHTML(d.id, d.name)).join('');
   } catch (err) {
-    list.innerHTML = '<p class="empty-msg">Error loading categories.</p>';
+    list.innerHTML = `<p class="empty-msg">Error: ${err.message}</p>`;
     showToast(err.message, 'error');
   }
 }
@@ -46,10 +54,10 @@ function itemHTML(id, name) {
     <div class="item-row" id="row-${id}">
       <span class="item-name" id="name-${id}">${escHtml(name)}</span>
       <input class="item-edit-input" id="input-${id}" value="${escAttr(name)}" style="display:none">
-      <button class="btn-edit"        id="editBtn-${id}"   onclick="startEdit('${id}')">Edit</button>
-      <button class="btn-save-edit"   id="saveBtn-${id}"   onclick="saveEdit('${id}')" style="display:none">Save</button>
-      <button class="btn-cancel-edit" id="cancelBtn-${id}" onclick="cancelEdit('${id}')" style="display:none">✕</button>
-      <button class="btn-delete"      onclick="deleteItem('${id}', '${escAttr(name)}')">Delete</button>
+      <button class="btn-edit"        id="editBtn-${id}"   onclick="startEdit('${id}')" aria-label="Edit"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-save-edit"   id="saveBtn-${id}"   onclick="saveEdit('${id}')"   aria-label="Save"   style="display:none"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="btn-cancel-edit" id="cancelBtn-${id}" onclick="cancelEdit('${id}')" aria-label="Cancel" style="display:none"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="btn-delete"      onclick="deleteItem('${id}', '${escAttr(name)}')"  aria-label="Delete"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
     </div>`;
 }
 
