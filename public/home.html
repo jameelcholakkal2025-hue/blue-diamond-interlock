@@ -266,13 +266,39 @@
       document.getElementById('scrollHint').style.opacity = current === 0 ? '1' : '0';
     }
 
-    let tx = 0;
-    const track = document.getElementById('carouselTrack');
-    track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-    track.addEventListener('touchend', e => {
-      const diff = tx - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 48) goToSlide(current + (diff > 0 ? 1 : -1));
+    let startX = 0, startY = 0, dragging = false;
+    const carousel = document.getElementById('carousel');
+
+    carousel.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      dragging = true;
+    }, { passive: true });
+
+    carousel.addEventListener('touchmove', e => {
+      if (!dragging) return;
+      const dx = Math.abs(e.touches[0].clientX - startX);
+      const dy = Math.abs(e.touches[0].clientY - startY);
+      if (dx > dy) e.preventDefault(); // horizontal swipe — block scroll
+    }, { passive: false });
+
+    carousel.addEventListener('touchend', e => {
+      if (!dragging) return;
+      dragging = false;
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goToSlide(current + (diff > 0 ? 1 : -1));
     });
+
+    // Mouse drag for desktop
+    let mouseDown = false, mouseStartX = 0;
+    carousel.addEventListener('mousedown', e => { mouseDown = true; mouseStartX = e.clientX; });
+    carousel.addEventListener('mouseup',   e => {
+      if (!mouseDown) return;
+      mouseDown = false;
+      const diff = mouseStartX - e.clientX;
+      if (Math.abs(diff) > 40) goToSlide(current + (diff > 0 ? 1 : -1));
+    });
+    carousel.addEventListener('mouseleave', () => { mouseDown = false; });
   </script>
 <script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
 </body>
