@@ -38,7 +38,7 @@ auth.onAuthStateChanged(async user => {
     // Firebase may fire null briefly before restoring a cached session.
     // Wait 600ms then check currentUser before redirecting.
     await new Promise(r => setTimeout(r, 600));
-    if (!auth.currentUser) { window.location.href = 'admin.html'; }
+    if (!auth.currentUser) { window.location.href = 'index.html'; }
     return;
   }
   document.getElementById('authGuard').style.display  = 'none';
@@ -312,7 +312,7 @@ document.getElementById('productForm').addEventListener('submit', async e => {
       await db.collection('products').add(product);
       showToast('Product added!', 'success');
     }
-    setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
+    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
   } catch (err) {
     showToast('Error: ' + err.message, 'error');
     btn.textContent = isEdit ? 'Update Product' : 'Save Product';

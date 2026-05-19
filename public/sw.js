@@ -1,10 +1,10 @@
-const CACHE = 'bluediamond-v3';
+const CACHE = 'bluediamond-v4';
 
 const PRECACHE = [
-  '/index.html',
+  '/home.html',
   '/catalogue.html',
   '/product.html',
-  '/admin.html',
+  '/index.html',
   '/add-product.html',
   '/colors.html',
   '/categories.html',

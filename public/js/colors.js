@@ -14,7 +14,7 @@ const COL = 'colors';
 auth.onAuthStateChanged(async user => {
   if (!user) {
     await new Promise(r => setTimeout(r, 600));
-    if (!auth.currentUser) { window.location.href = 'admin.html'; return; }
+    if (!auth.currentUser) { window.location.href = 'index.html'; return; }
   }
   document.getElementById('authGuard').style.display = 'none';
   document.getElementById('pageContent').style.display = 'block';
