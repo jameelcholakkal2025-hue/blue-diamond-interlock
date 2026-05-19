@@ -85,7 +85,8 @@ function bindEvents() {
 }
 
 function renderCategories() {
-  const cats = ['all', ...new Set(allProducts.map(p => p.category))];
+  // Use catMap as source of truth — deduplicated by ID, labels from Firestore
+  const cats = ['all', ...Object.keys(catMap).filter(k => k !== 'all')];
   const container = document.getElementById('categoryBtns');
   container.innerHTML = cats.map(c => `
     <button class="cat-btn ${c === activeCategory ? 'active' : ''}" data-cat="${c}">
