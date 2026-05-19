@@ -252,11 +252,13 @@ header {
 }
 
 .slide-hero h1 {
-  font-size: clamp(1.5rem, 6.5vw, 2.2rem);
+  font-family: 'Arimo', sans-serif;
+  font-size: clamp(calc(1.5rem + 5px), calc(6.5vw + 5px), calc(2.2rem + 5px));
   font-weight: 900;
   letter-spacing: 0.5px;
   line-height: 1.2;
   margin-bottom: 0;
+  color: #0071af;
 }
 
 .slide-hero h1 em {
@@ -265,13 +267,14 @@ header {
 }
 
 .hero-subtitle {
-  font-size: 0.82rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: calc(0.82rem + 5px);
   font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  opacity: 0.7;
   margin: 0 auto !important;
-  color: var(--sky-light);
+  color: #080e0f;
+  opacity: 1;
 }
 
 .slide-hero > p:not(.hero-subtitle) {
