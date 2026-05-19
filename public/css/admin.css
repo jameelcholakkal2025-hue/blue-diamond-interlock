@@ -374,6 +374,18 @@ body {
   color: var(--blue-dark);
 }
 
+.admin-price-val {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--blue-main);
+}
+
+.admin-price-label {
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
 /* Action buttons — borderless pill row */
 .prod-card-actions {
   display: flex;
@@ -476,6 +488,88 @@ body {
   height: 18px;
   accent-color: var(--blue-main);
   cursor: pointer;
+}
+
+.radio-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.radio-item input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue-main);
+  cursor: pointer;
+}
+
+/* ── Pricing section card ── */
+.price-section {
+  background: #f8f9fc;
+  border: 1.5px solid var(--border, #dde3ef);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 0;
+}
+
+.price-section-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-mid, #555);
+  margin-bottom: 12px;
+}
+
+/* ── Color chip widget ── */
+.color-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.color-chip {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.color-chip input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.color-chip span {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border, #dde3ef);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-mid, #555);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.color-chip input[type="checkbox"]:checked + span {
+  background: var(--blue-main, #1565C0);
+  border-color: var(--blue-main, #1565C0);
+  color: #fff;
 }
 
 .form-actions {

@@ -78,34 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('addNewBtn').addEventListener('click', () => {
     window.location.href = 'add-product.html';
   });
-  document.getElementById('cancelBtn').addEventListener('click', closeForm);
-  document.getElementById('productForm').addEventListener('submit', handleSubmit);
-
-  document.getElementById('mediaInput').addEventListener('change', async e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    document.getElementById('uploadProgress').style.display = 'block';
-    document.getElementById('progressBar').style.width = '0%';
-    document.getElementById('progressText').textContent = 'Uploading 0%…';
-    try {
-      const result = await uploadToCloudinary(file, pct => {
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('progressText').textContent = `Uploading ${pct}%…`;
-      });
-      document.getElementById('uploadProgress').style.display = 'none';
-      const preview = document.getElementById('mediaPreview');
-      preview.dataset.url   = result.url;
-      preview.dataset.type  = result.type;
-      preview.dataset.thumb = result.thumbnail;
-      preview.innerHTML = result.type === 'video'
-        ? `<video src="${result.url}" controls style="max-height:150px;border-radius:8px;"></video>`
-        : `<img src="${result.url}" alt="Preview" style="max-height:150px;border-radius:8px;">`;
-      showToast('Uploaded!', 'success');
-    } catch (err) {
-      document.getElementById('uploadProgress').style.display = 'none';
-      showToast(err.message, 'error');
-    }
-  });
 });
 
 // ── Auth UI ──
@@ -199,10 +171,12 @@ async function loadAdminProducts() {
         ? `<img src="${p.image}" alt="${p.name}">`
         : '<div class="no-img">No Image</div>';
     const videoBadge = p.mediaType === 'video' ? '<span class="vid-badge">VIDEO</span>' : '';
-    const price = [
-      p.priceWithPolish    > 0 ? '₹' + p.priceWithPolish    + ' (polish)' : '',
-      p.priceWithoutPolish > 0 ? '₹' + p.priceWithoutPolish + ' (no polish)' : ''
-    ].filter(Boolean).join(' · ') || 'On request';
+    const _sfx = (p.priceType || '').toLowerCase() === 'sqft' ? '/Sqft' : '/Piece';
+    const pricePolished   = p.priceWithPolish    > 0 ? `<span class="admin-price-val">₹${p.priceWithPolish}</span><span class="admin-price-label">${_sfx} · Polished</span>`   : '';
+    const priceUnpolished = p.priceWithoutPolish > 0 ? `<span class="admin-price-val">₹${p.priceWithoutPolish}</span><span class="admin-price-label">${_sfx} · Unpolished</span>` : '';
+    const price = pricePolished || priceUnpolished
+      ? [pricePolished, priceUnpolished].filter(Boolean).map(l => `<div>${l}</div>`).join('')
+      : 'On request';
     return `
       <div class="prod-card">
         <div class="prod-card-body">

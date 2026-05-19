@@ -14,6 +14,16 @@ firebase.initializeApp(FIREBASE_CONFIG);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
+async function loadCategories() {
+  const snap = await firebase.firestore().collection('categories').get();
+  const map = {};
+  snap.docs.forEach(d => {
+    const data = d.data();
+    map[d.id] = data.name || data.label || data.category || d.id;
+  });
+  return map;
+}
+
 // Detect edit mode via ?id= query param
 const editId = new URLSearchParams(window.location.search).get('id');
 const isEdit = !!editId;
@@ -80,9 +90,20 @@ async function loadProductForEdit(id) {
   document.getElementById('fName').value        = p.name     || '';
   document.getElementById('fCategory').value    = p.category || '';
   document.getElementById('fSize').value        = p.size     || '';
-  document.getElementById('fPricePolish').value = p.priceWithPolish  || 0;
-  document.getElementById('fPrice').value       = p.priceWithoutPolish || 0;
-  document.getElementById('fDesc').value        = p.description || '';
+  document.getElementById('fDesc').value = p.description || '';
+
+  if ((p.priceType || '').toLowerCase() === 'sqft') {
+    document.getElementById('priceTypeSqft').checked  = true;
+    document.getElementById('priceTypePiece').checked = false;
+    document.getElementById('pricePieceFields').style.display = 'none';
+    document.getElementById('priceSqftFields').style.display  = '';
+    document.getElementById('fRatePolish').value = p.priceWithPolish    || 0;
+    document.getElementById('fRate').value       = p.priceWithoutPolish || 0;
+    updateSqftPreview();
+  } else {
+    document.getElementById('fPricePolish').value = p.priceWithPolish    || 0;
+    document.getElementById('fPrice').value       = p.priceWithoutPolish || 0;
+  }
 
   // Pre-select saved colors
   const savedColors = p.colors || (p.color ? [p.color] : []);
@@ -103,6 +124,44 @@ async function loadProductForEdit(id) {
     renderThumb(i, media);
   });
 }
+
+// ── Price type toggle ──
+function parseSizeSqFt(sizeStr) {
+  const nums = (sizeStr || '').match(/[\d.]+/g);
+  if (!nums || nums.length < 2) return null;
+  return (parseFloat(nums[0]) * parseFloat(nums[1])) / 144; // inches → sq ft
+}
+
+function updateSqftPreview() {
+  const ratePolish = parseFloat(document.getElementById('fRatePolish').value) || 0;
+  const rate       = parseFloat(document.getElementById('fRate').value)       || 0;
+  const sqft       = parseSizeSqFt(document.getElementById('fSize').value);
+  const wrap       = document.getElementById('sqftPreviewWrap');
+  const preview    = document.getElementById('sqftCalcPreview');
+  if (sqft && (ratePolish || rate)) {
+    const withP    = Math.round(ratePolish * sqft);
+    const withoutP = Math.round(rate * sqft);
+    preview.textContent = `Size: ${sqft.toFixed(3)} sq ft  →  Polished: ₹${withP}  |  Unpolished: ₹${withoutP}`;
+    wrap.style.display = '';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
+document.querySelectorAll('input[name="priceType"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const isSqft = document.getElementById('priceTypeSqft').checked;
+    document.getElementById('pricePieceFields').style.display = isSqft ? 'none' : '';
+    document.getElementById('priceSqftFields').style.display  = isSqft ? ''     : 'none';
+    if (isSqft) updateSqftPreview();
+  });
+});
+
+['fRatePolish', 'fRate', 'fSize'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => {
+    if (document.getElementById('priceTypeSqft').checked) updateSqftPreview();
+  });
+});
 
 // ── Open file picker ──
 document.getElementById('mediaAddBtn').addEventListener('click', () => {
@@ -202,15 +261,24 @@ document.getElementById('productForm').addEventListener('submit', async e => {
   btn.textContent = isEdit ? 'Updating…' : 'Saving…';
   btn.disabled = true;
 
-  const priceWithPolish    = parseInt(document.getElementById('fPricePolish').value) || 0;
-  const priceWithoutPolish = parseInt(document.getElementById('fPrice').value)       || 0;
+  const isSqft = document.getElementById('priceTypeSqft').checked;
+  const sizeVal = document.getElementById('fSize').value.trim();
+  const priceWithPolish    = isSqft
+    ? (parseFloat(document.getElementById('fRatePolish').value) || 0)
+    : (parseInt(document.getElementById('fPricePolish').value)  || 0);
+  const priceWithoutPolish = isSqft
+    ? (parseFloat(document.getElementById('fRate').value)       || 0)
+    : (parseInt(document.getElementById('fPrice').value)        || 0);
 
   const product = {
     name:              document.getElementById('fName').value.trim(),
     category:          document.getElementById('fCategory').value,
-    size:              document.getElementById('fSize').value.trim(),
+    size:              sizeVal,
+    priceType:         isSqft ? 'sqft' : 'piece',
     priceWithPolish,
     priceWithoutPolish,
+    ratePerSqFt:           firebase.firestore.FieldValue.delete(),
+    ratePerSqFtWithPolish: firebase.firestore.FieldValue.delete(),
     colors:      (() => {
       const chips = Array.from(document.querySelectorAll('input[name="fColors"]:checked')).map(cb => cb.value);
       if (chips.length) return chips;
@@ -237,6 +305,9 @@ document.getElementById('productForm').addEventListener('submit', async e => {
       await db.collection('products').doc(editId).update(product);
       showToast('Product updated!', 'success');
     } else {
+      // FieldValue.delete() not valid on add — strip before creating
+      delete product.ratePerSqFt;
+      delete product.ratePerSqFtWithPolish;
       product.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       await db.collection('products').add(product);
       showToast('Product added!', 'success');

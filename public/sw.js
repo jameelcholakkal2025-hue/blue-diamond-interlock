@@ -1,15 +1,21 @@
-const CACHE = 'bluediamond-v2';
+const CACHE = 'bluediamond-v3';
 
 const PRECACHE = [
   '/index.html',
   '/catalogue.html',
   '/product.html',
+  '/admin.html',
+  '/add-product.html',
+  '/colors.html',
+  '/categories.html',
   '/css/style.css',
   '/css/admin.css',
   '/js/main.js',
-  '/js/data.js',
-  '/js/config.js',
+  '/js/admin.js',
+  '/js/add-product.js',
   '/js/product.js',
+  '/js/colors.js',
+  '/js/categories.js',
   '/assets/logo.svg',
   '/assets/icon.jpeg',
   '/manifest.json'

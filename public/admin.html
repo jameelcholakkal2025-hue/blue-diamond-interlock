@@ -13,13 +13,13 @@
 
   <!-- Admin Header -->
   <header class="admin-header">
-    <div class="admin-brand">
-      <div>
-        <h1>Admin Dashboard</h1>
-      </div>
+    <a href="index.html" aria-label="Home" class="menu-btn" title="Go to Home" style="text-decoration:none;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </a>
+    <div style="position:absolute;left:50%;transform:translateX(-50%);">
+      <h1 style="font-size:1.05rem;font-weight:700;color:white;margin:0;">Admin Dashboard</h1>
     </div>
     <div class="header-right" id="headerRight">
-      <a href="catalogue.html" class="btn-outline">View Products</a>
       <div class="share-wrap" id="shareWrap">
         <button class="share-icon-btn" onclick="toggleShareMenu(event)" aria-label="Share links">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -45,6 +45,15 @@
       </button>
     </div>
   </header>
+
+  <!-- PWA Install Banner -->
+  <div id="pwaInstallBanner" style="display:none;background:#1B3D6F;color:white;padding:10px 16px;display:none;align-items:center;justify-content:space-between;gap:12px;font-size:0.88rem;">
+    <span>Install Blue Diamond app for quick access</span>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button id="pwaInstallBtn" style="background:white;color:#1B3D6F;border:none;border-radius:6px;padding:6px 14px;font-weight:700;cursor:pointer;font-size:0.85rem;">Install</button>
+      <button id="pwaInstallDismiss" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:0.85rem;">✕</button>
+    </div>
+  </div>
 
   <!-- Login Section -->
   <div id="loginSection" style="display:none">
@@ -148,86 +157,6 @@
       <p class="list-empty">Loading products…</p>
     </div>
 
-    <!-- Add / Edit form -->
-    <div id="formSection">
-      <h3 id="formTitle">Add New Product</h3>
-      <form id="productForm" autocomplete="off">
-        <div class="form-grid">
-
-          <div class="form-group">
-            <label for="fName">Product Name *</label>
-            <input type="text" id="fName" placeholder="e.g. Mushroom Model" required>
-          </div>
-
-          <div class="form-group">
-            <label for="fCategory">Category *</label>
-            <select id="fCategory" required>
-              <option value="">Select category</option>
-              <option value="interlock">Interlock</option>
-              <option value="natural">Natural Stone</option>
-              <option value="blocks">Blocks</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="fSize">Size *</label>
-            <input type="text" id="fSize" placeholder='e.g. 8"x11"' required>
-          </div>
-
-          <div class="form-group">
-            <label for="fPrice">Price (₹/sqft — enter 0 for "Contact for price")</label>
-            <input type="number" id="fPrice" placeholder="0" min="0">
-          </div>
-
-          <div class="form-group">
-            <label for="fColor">Color / Finish *</label>
-            <input type="text" id="fColor" placeholder="e.g. Terracotta Red" required>
-          </div>
-
-          <div class="form-group">
-            <label>Options</label>
-            <div class="checkbox-row">
-              <label class="check-item">
-                <input type="checkbox" id="fFeatured"> Featured product
-              </label>
-              <label class="check-item">
-                <input type="checkbox" id="fInStock" checked> In Stock
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group full">
-            <label for="fDesc">Description *</label>
-            <textarea id="fDesc" placeholder="Describe the product – texture, use case, durability…" required></textarea>
-          </div>
-
-          <div class="form-group full">
-            <label>Photo or Video</label>
-            <div class="img-upload-area" onclick="document.getElementById('mediaInput').click()">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
-              </svg>
-              <p style="font-size:0.88rem;margin-top:8px;color:#555;">Click to upload image or video</p>
-              <p class="upload-hint">JPG · PNG · WEBP · MP4 · MOV · Max 100 MB</p>
-              <input type="file" id="mediaInput" accept="image/*,video/*">
-            </div>
-            <div id="uploadProgress">
-              <div class="progress-bar-wrap"><div id="progressBar"></div></div>
-              <span id="progressText">Uploading 0%…</span>
-            </div>
-            <div id="mediaPreview"></div>
-          </div>
-
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-save">Save Product</button>
-          <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
-        </div>
-      </form>
-    </div>
-
   </div>
 
   <!-- Toast notification -->
@@ -240,6 +169,14 @@
       <span>Menu</span>
       <button class="slide-close-btn" onclick="toggleMenu()" aria-label="Close">✕</button>
     </div>
+    <a href="catalogue.html" class="slide-menu-item" onclick="toggleMenu()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      View Products
+    </a>
+    <a href="index.html" class="slide-menu-item" onclick="toggleMenu()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      View Home
+    </a>
     <a href="colors.html" class="slide-menu-item" onclick="toggleMenu()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
       Colors
@@ -277,6 +214,29 @@
       }
     }
   </script>
-<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
+<script>
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js");
+
+  let _deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    _deferredPrompt = e;
+    document.getElementById('pwaInstallBanner').style.display = 'flex';
+  });
+  document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
+    if (!_deferredPrompt) return;
+    _deferredPrompt.prompt();
+    const { outcome } = await _deferredPrompt.userChoice;
+    _deferredPrompt = null;
+    document.getElementById('pwaInstallBanner').style.display = 'none';
+  });
+  document.getElementById('pwaInstallDismiss').addEventListener('click', () => {
+    document.getElementById('pwaInstallBanner').style.display = 'none';
+  });
+  window.addEventListener('appinstalled', () => {
+    document.getElementById('pwaInstallBanner').style.display = 'none';
+    _deferredPrompt = null;
+  });
+</script>
 </body>
 </html>

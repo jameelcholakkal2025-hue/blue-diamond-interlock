@@ -110,12 +110,13 @@ function render(p) {
   const polishEl    = document.getElementById('prodPricePolish');
   const noPolishEl  = document.getElementById('prodPrice');
 
+  const sfx = (p.priceType || '').toLowerCase() === 'sqft' ? '/Sqft' : '/Piece';
   if (p.priceWithPolish > 0) {
-    polishEl.textContent   = '₹' + p.priceWithPolish + '/sqft (with polish)';
+    polishEl.textContent   = '₹' + p.priceWithPolish + sfx + ' (Polished)';
     polishEl.style.display = 'block';
   }
   noPolishEl.textContent = p.priceWithoutPolish > 0
-    ? '₹' + p.priceWithoutPolish + '/sqft (without polish)'
+    ? '₹' + p.priceWithoutPolish + sfx + ' (Unpolished)'
     : 'Contact for price';
   document.getElementById('prodSize').textContent     = p.size  || '—';
   document.getElementById('prodColor').textContent    = p.color || '—';
