@@ -2,7 +2,7 @@
   "name": "Blue Diamond Interlock",
   "short_name": "Blue Diamond",
   "description": "Premium interlock and natural stone. Mala Road Jn-Pulinkav.",
-  "start_url": "/admin.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1B3D6F",
