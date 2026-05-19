@@ -176,9 +176,9 @@ function renderProducts() {
           <div class="price-stack">
             ${(() => {
               const suffix = (p.priceType || '').toLowerCase() === 'sqft' ? '/Sqft' : '/Piece';
-              const r = p.priceWithPolish    > 0 ? `<span class="price-tag">₹${p.priceWithPolish}${suffix} Polished</span>` : '';
+              const r = p.priceWithPolish    > 0 ? `<span class="price-tag">₹${p.priceWithPolish} ${suffix} Polished</span>` : '';
               const u = p.priceWithoutPolish > 0
-                ? `<span class="price-polish">₹${p.priceWithoutPolish}${suffix} Unpolished</span>`
+                ? `<span class="price-polish">₹${p.priceWithoutPolish} ${suffix} Unpolished</span>`
                 : '<span class="price-polish">Contact for price</span>';
               return r + u;
             })()}
