@@ -1,4 +1,4 @@
-const CACHE = 'bluediamond-v5';
+const CACHE = 'bluediamond-v6';
 
 const PRECACHE = [
   '/home.html',
@@ -18,6 +18,9 @@ const PRECACHE = [
   '/js/categories.js',
   '/assets/logo.svg',
   '/assets/icon.jpeg',
+  '/assets/icon-192.png',
+  '/assets/icon-512.png',
+  '/assets/icon-512-maskable.png',
   '/manifest.json'
 ];
 
