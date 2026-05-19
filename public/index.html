@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/assets/icon.jpeg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Blue Diamond">
   <title>Admin – Blue Diamond Interlock</title>
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="stylesheet" href="css/admin.css">
@@ -217,20 +220,33 @@
 <script>
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js");
 
+  // iOS: show "Add to Home Screen" guidance instead of beforeinstallprompt
+  const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const _isStandalone = window.navigator.standalone;
+  if (_isIOS && !_isStandalone && !localStorage.getItem('iosBannerDismissed')) {
+    const banner = document.getElementById('pwaInstallBanner');
+    banner.querySelector('span').textContent = '';
+    banner.querySelector('span').innerHTML = 'Add to Home Screen: tap Share 📤 then <strong>Add to Home Screen</strong>';
+    document.getElementById('pwaInstallBtn').style.display = 'none';
+    banner.style.display = 'flex';
+  }
+  document.getElementById('pwaInstallDismiss').addEventListener('click', () => {
+    document.getElementById('pwaInstallBanner').style.display = 'none';
+    localStorage.setItem('iosBannerDismissed', '1');
+  });
+
+  // Android/Chrome: beforeinstallprompt
   let _deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     _deferredPrompt = e;
-    document.getElementById('pwaInstallBanner').style.display = 'flex';
+    if (!_isIOS) document.getElementById('pwaInstallBanner').style.display = 'flex';
   });
   document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
     if (!_deferredPrompt) return;
     _deferredPrompt.prompt();
     const { outcome } = await _deferredPrompt.userChoice;
     _deferredPrompt = null;
-    document.getElementById('pwaInstallBanner').style.display = 'none';
-  });
-  document.getElementById('pwaInstallDismiss').addEventListener('click', () => {
     document.getElementById('pwaInstallBanner').style.display = 'none';
   });
   window.addEventListener('appinstalled', () => {

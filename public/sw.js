@@ -1,4 +1,4 @@
-const CACHE = 'bluediamond-v4';
+const CACHE = 'bluediamond-v5';
 
 const PRECACHE = [
   '/home.html',
