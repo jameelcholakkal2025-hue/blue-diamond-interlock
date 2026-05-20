@@ -86,7 +86,16 @@ function bindEvents() {
 
 function renderCategories() {
   // Use catMap as source of truth — deduplicated by ID, labels from Firestore
-  const cats = ['all', ...Object.keys(catMap).filter(k => k !== 'all')];
+  // Order: interlock first, then stone, then rest
+  const catPriority = k => {
+    const lbl = (catMap[k] || k).toLowerCase();
+    if (lbl.includes('interlock'))                    return 0;
+    if (lbl.includes('stone') && !lbl.includes('other')) return 1;
+    if (lbl.includes('stone'))                        return 2;
+    return 3;
+  };
+  const sorted = Object.keys(catMap).filter(k => k !== 'all').sort((a, b) => catPriority(a) - catPriority(b));
+  const cats = ['all', ...sorted];
   const container = document.getElementById('categoryBtns');
   container.innerHTML = cats.map(c => `
     <button class="cat-btn ${c === activeCategory ? 'active' : ''}" data-cat="${c}">
@@ -103,6 +112,14 @@ function renderCategories() {
   });
 }
 
+function catSortPriority(p) {
+  const lbl = (catMap[p.category] || p.category || '').toLowerCase();
+  if (lbl.includes('interlock'))                    return 0;
+  if (lbl.includes('stone') && !lbl.includes('other')) return 1;
+  if (lbl.includes('stone'))                        return 2;
+  return 3;
+}
+
 function filteredProducts() {
   return allProducts.filter(p => {
     const matchCat    = activeCategory === 'all' || p.category === activeCategory;
@@ -111,7 +128,7 @@ function filteredProducts() {
       (p.description || '').toLowerCase().includes(searchQuery) ||
       (p.color || '').toLowerCase().includes(searchQuery);
     return matchCat && matchSearch && p.inStock !== false;
-  });
+  }).sort((a, b) => catSortPriority(a) - catSortPriority(b));
 }
 
 function getCategoryLabel(cat) {
